@@ -1,3 +1,5 @@
+import { getAuth, getSpreadSheet } from "../services/GoogleSheetServices.js";
+
 export const ScanQR = async (req, res, next) => {
     try {
         res.send("ScanQR");
