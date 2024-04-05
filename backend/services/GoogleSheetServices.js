@@ -27,16 +27,20 @@ const getSpreadSheetValues = async({spreadsheetId, auth, range}) => {
 }
 
 const updateSpreadSheetsValues = async ({ spreadsheetId, auth, range, data }) => {
-    const response = await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        auth,
-        range,
-        valueInputOption: "USER_ENTERED",
-        resource: {
-            values: data
-        }
-    });
-    return response;
+    try {
+        const response = await sheets.spreadsheets.values.update({
+            spreadsheetId,
+            auth,
+            range,
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: data
+            }
+        });
+        console.log(`Updated ${range} Sucessfully`);
+    } catch (error) {
+        console.log("error", error);
+    }
 };
 
 export {getAuth, getSpreadSheet, getSpreadSheetValues, updateSpreadSheetsValues};
