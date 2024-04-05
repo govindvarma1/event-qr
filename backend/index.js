@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/generate-qr", GenerateQR);
-app.get("/scan-qr/:id", ScanQR);
+app.post("/scan-qr/:id", ScanQR);
 
 app.listen(process.env.PORT, ()=> {
     console.log("Server running on port 5000");
