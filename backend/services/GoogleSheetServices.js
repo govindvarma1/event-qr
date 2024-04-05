@@ -6,29 +6,28 @@ const getAuth = async() => {
         keyFile: "./google.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets",
     })
-    const client = await auth.getClient();
-    return client;
+    return await auth.getClient();
 }
 
 const getSpreadSheet = async ({ spreadsheetId, auth }) => {
-    const spreadsheet = await sheets.spreadsheets.get({
+    const response = await sheets.spreadsheets.get({
         spreadsheetId,
         auth
     });
-    return spreadsheet;
+    return response;
 }
 
 const getSpreadSheetValues = async({spreadsheetId, auth, range}) => {
-    const spreadsheet = await sheets.spreadsheets.values.get({
+    const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
         auth,
         range
     })
-    return spreadsheet.data;
+    return response.data;
 }
 
 const updateSpreadSheetsValues = async ({ spreadsheetId, auth, range, data }) => {
-    const res = await sheets.spreadsheets.values.update({
+    const response = await sheets.spreadsheets.values.update({
         spreadsheetId,
         auth,
         range,
@@ -37,7 +36,7 @@ const updateSpreadSheetsValues = async ({ spreadsheetId, auth, range, data }) =>
             values: data
         }
     });
-    return res;
+    return response;
 };
 
 export {getAuth, getSpreadSheet, getSpreadSheetValues, updateSpreadSheetsValues};
