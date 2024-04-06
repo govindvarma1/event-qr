@@ -19,7 +19,7 @@ const QRscanner = React.forwardRef((props, ref) => {
             }
             setScanResult({ data: "", error: "null" })
             const response = await fetch(
-                `https://event-qr.onrender.com/scan-qr/${scanResult.data}`,
+                `${import.meta.env.API_KEY}/scan-qr/${scanResult.data}`,
                 {
                     method: "POST",
                 }
