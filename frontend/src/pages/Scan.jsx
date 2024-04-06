@@ -5,38 +5,43 @@ import { ScanModal } from "../modals/ScanModal";
 
 const QRscanner = React.forwardRef((props, ref) => {
     const [modalShow, setModalShow] = useState(false);
+    const [modalDisplay, setModalDisplay] = useState("")
     const [scanResult, setScanResult] = useState({
         data: "",
         error: null,
     });
 
-    const validateQR = async () => {
+    async function validateQR() {
         try {
             if (scanResult.data === "") {
                 console.log("No QR code scanned.");
                 return;
             }
-
+            setScanResult({ data: "", error: "null" })
             const response = await fetch(
-                `http://localhost:5000/scan-qr/${scanResult.data}`,
+                `https://event-qr.onrender.com/scan-qr/${scanResult.data}`,
                 {
                     method: "POST",
                 }
             );
-            const data = await response.json();
-
             if (response.status === 200) {
+                setModalDisplay("1");
                 setModalShow(true);
                 console.log("Scanned Successfully");
             } else if (response.status === 404) {
+                setModalDisplay("2");
+                setModalShow(true);
                 console.log("User didn't register");
-            } else {
+            } else if (response.status === 401) {
+                setModalDisplay("3");
+                setModalShow(true);
                 console.log("Already Scanned");
             }
+            setScanResult({ data: "", error: null });
         } catch (error) {
             console.error("Error validating QR code:", error);
         }
-    };
+    }
 
     const handleScan = (data) => {
         if (data) {
@@ -55,27 +60,25 @@ const QRscanner = React.forwardRef((props, ref) => {
                 <QrReader
                     ref={ref}
                     onResult={handleScan}
-                    onError={handleError}
                     delay={300}
                     constraints={{
-                        facingMode: 'environment'
+                        facingMode: 'environment',
+                        aspectRatio: { ideal: 1 },
                     }}
                     style={{ width: "100%" }}
                 />
             </div>
-            {scanResult.error ? (
-                <ScanStatus>QR Code not detected</ScanStatus>
-            ) : scanResult.data ? (
-                <ScanStatus>{scanResult.data}</ScanStatus>
+            {scanResult.data ? (
+                <h6>{scanResult.data.text}</h6>
             ) : (
-                <ScanStatus>Scan a QR Code</ScanStatus>
+                <h6>Scan a QR Code</h6>
             )}
             <div className="buttons">
                 <button className="validate" onClick={validateQR}>
                     Validate QR
                 </button>
             </div>
-            <ScanModal show={modalShow} onHide={() => setModalShow(false)} />
+            <ScanModal display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
         </Container>
     );
 });
@@ -83,40 +86,35 @@ const QRscanner = React.forwardRef((props, ref) => {
 export default QRscanner;
 
 const Container = styled.div`
-    margin: 2rem auto;
+    margin: 2rem 0;
     text-align: center;
-    max-width: 300px;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #f5f5f5;
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     .scanner {
-        margin-bottom: 1rem;
+        margin: 0.75rem auto;
+        width: 100vw;
+        max-width: 350px !important;
+        border: 2px black solid;
+        border-radius: 10px
+    }
+    h6 {
+        margin: 0.75rem 0;
+        font-size: 1.5rem;
     }
     .buttons {
-        display: flex;
-        justify-content: center;
         button {
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 10px;
             color: white;
             background-color: #3b71ca;
-            border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            border: none;
+            font-size: 1.1rem;
             transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #1f4a8e;
         }
     }
-`;
-
-const ScanStatus = styled.h2`
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
 `;
