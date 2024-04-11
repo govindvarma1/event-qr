@@ -1,120 +1,104 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import QrScanner from "qr-scanner";
+import QrFrame from "./../assets/qr-frame.svg";
 import styled from "styled-components";
-import { QrReader } from "react-qr-reader";
-import { ScanModal } from "../modals/ScanModal";
 
-const QRscanner = React.forwardRef((props, ref) => {
-    const [modalShow, setModalShow] = useState(false);
-    const [modalDisplay, setModalDisplay] = useState("")
-    const [scanResult, setScanResult] = useState({
-        data: "",
-        error: null,
-    });
+const QrReader = () => {
+  const scanner = useRef();
+  const videoEl = useRef(null);
+  const qrBoxEl = useRef(null);
+  const [qrOn, setQrOn] = useState(true);
+  const [scannedResult, setScannedResult] = useState("");
 
-    async function validateQR() {
-        try {
-            if (scanResult.data === "") {
-                console.log("No QR code scanned.");
-                return;
-            }
-            console.log(import.meta.env.VITE_API_KEY);
-            const response = await fetch(
-                `${import.meta.env.VITE_API_KEY}/scan-qr/${scanResult.data}`,
-                {
-                    method: "POST",
-                }
-            );
-            if (response.status === 200) {
-                setModalDisplay("1");
-                setModalShow(true);
-                console.log("Scanned Successfully");
-            } else if (response.status === 404) {
-                setModalDisplay("2");
-                setModalShow(true);
-                console.log("User didn't register");
-            } else if (response.status === 401) {
-                setModalDisplay("3");
-                setModalShow(true);
-                console.log("Already Scanned");
-            }
-            setScanResult({ data: "", error: null });
-        } catch (error) {
-            console.error("Error validating QR code:", error);
-        }
+  const onScanSuccess = (result) => {
+    console.log(result);
+    setScannedResult(result?.data);
+  };
+
+  const onScanFail = (err) => {
+    // console.log(err);
+  };
+
+  useEffect(() => {
+    if (videoEl.current && !scanner.current) {
+      scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
+        onDecodeError: onScanFail,
+        preferredCamera: "environment",
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+        maxScansPerSecond: 2,
+        overlay: qrBoxEl.current || undefined,
+      });
+
+      scanner.current
+        .start()
+        .then(() => setQrOn(true))
+        .catch((err) => {
+          if (err) setQrOn(false);
+        });
     }
 
-    const handleScan = (data) => {
-        if (data) {
-            setScanResult({ data, error: null });
-        }
+    return () => {
+      if (!videoEl.current) {
+        scanner.current.stop();
+      }
     };
+  }, []);
 
-    const handleError = (err) => {
-        console.error(err);
-    };
+  useEffect(() => {
+    if (!qrOn)
+      alert(
+        "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
+      );
+  }, [qrOn]);
 
-    return (
-        <Container>
-            <h1>QR Scanner</h1>
-            <div className="scanner">
-                <QrReader
-                    ref={ref}
-                    onResult={handleScan}
-                    delay={300}
-                    constraints={{
-                        facingMode: 'environment',
-                        aspectRatio: { ideal: 1 },
-                    }}
-                    style={{ width: "100%" }}
-                />
-            </div>
-            {scanResult.data ? (
-                <h6>{scanResult.data.text}</h6>
-            ) : (
-                <h6>Scan a QR Code</h6>
-            )}
-            <div className="buttons">
-                <button className="validate" onClick={validateQR}>
-                    Validate QR
-                </button>
-            </div>
-            <ScanModal display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
-        </Container>
-    );
-});
+  return (
+    <QrReaderContainer>
+      <div className="qr-reader">
+        <video ref={videoEl} className="qr-video"></video>
+        {scannedResult && (
+          <p className="scanned-result">
+            Scanned Result: {scannedResult}
+          </p>
+        )}
+      </div>
+      <div className="buttons">
+        <button onClick={() => RedeemOne()}>Redeem One Coupon</button>
+        <button onClick={() => RedeemAll()}>Redeem All Coupon</button>
+      </div>
+    </QrReaderContainer>
+  );
+};
 
-export default QRscanner;
+const QrReaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 
-const Container = styled.div`
-    margin: 2rem 0;
-    text-align: center;
+  .qr-reader {
+    position: relative;
+    width: 90vw;
+    height: 400px;
+    max-width: 400px;
+  }
+
+  .qr-video {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    .scanner {
-        margin: 0.75rem auto;
-        width: 100vw;
-        max-width: 350px !important;
-        border: 2px black solid;
-        border-radius: 10px
-    }
-    h6 {
-        margin: 0.75rem 0;
-        font-size: 1.5rem;
-    }
-    .buttons {
-        button {
-            cursor: pointer;
-            padding: 10px;
-            color: white;
-            background-color: #3b71ca;
-            border-radius: 5px;
-            border: none;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #1f4a8e;
-        }
-    }
+    border: 1px solid #ccc;
+  }
+
+  .scanned-result {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 999;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 5px;
+  }
 `;
+
+export default QrReader;
