@@ -19,6 +19,7 @@ const QrReader = () => {
     // console.log(err);
   };
 
+
   useEffect(() => {
     if (videoEl.current && !scanner.current) {
       scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
@@ -63,8 +64,8 @@ const QrReader = () => {
         )}
       </div>
       <div className="buttons">
-        <button onClick={() => RedeemOne()}>Redeem One Coupon</button>
-        <button onClick={() => RedeemAll()}>Redeem All Coupon</button>
+        <button className="one" onClick={() => RedeemOne()}>Redeem One Coupon</button>
+        <button className="all" onClick={() => RedeemAll()}>Redeem All Coupon</button>
       </div>
     </QrReaderContainer>
   );
@@ -75,13 +76,10 @@ const QrReaderContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 
   .qr-reader {
     position: relative;
-    width: 90vw;
-    height: 400px;
-    max-width: 400px;
+    max-width: 90vw;
   }
 
   .qr-video {
@@ -98,6 +96,22 @@ const QrReaderContainer = styled.div`
     background-color: rgba(0, 0, 0, 0.7);
     padding: 5px;
     border-radius: 5px;
+  }
+  .buttons{
+    display: flex;
+    gap: 1rem;
+    button{
+        padding: 5px;
+        border: none;
+        color: white;
+        border-radius: 5px;
+    }
+    .one{
+        background-color: #198754;
+    }
+    .all{
+        background-color: #0d6efd;
+    }
   }
 `;
 
