@@ -17,9 +17,9 @@ const QRscanner = React.forwardRef((props, ref) => {
                 console.log("No QR code scanned.");
                 return;
             }
-            setScanResult({ data: "", error: "null" })
+            console.log(import.meta.env.VITE_API_KEY);
             const response = await fetch(
-                `${import.meta.env.API_KEY}/scan-qr/${scanResult.data}`,
+                `${import.meta.env.VITE_API_KEY}/scan-qr/${scanResult.data}`,
                 {
                     method: "POST",
                 }
