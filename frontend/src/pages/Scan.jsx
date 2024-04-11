@@ -55,6 +55,7 @@ const QrReader = () => {
 
   return (
     <QrReaderContainer>
+    <h1>QR Code Scanner</h1>
       <div className="qr-reader">
         <video ref={videoEl} className="qr-video"></video>
         {scannedResult && (
@@ -76,10 +77,12 @@ const QrReaderContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  gap: 2rem;
+  margin: 2rem;
   .qr-reader {
     position: relative;
     max-width: 90vw;
+    border-radius: 3%;
   }
 
   .qr-video {
