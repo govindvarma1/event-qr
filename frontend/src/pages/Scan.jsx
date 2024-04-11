@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
-import QrFrame from "./../assets/qr-frame.svg";
 import styled from "styled-components";
 
 const QrReader = () => {
@@ -10,9 +9,36 @@ const QrReader = () => {
     const [qrOn, setQrOn] = useState(true);
     const [scannedResult, setScannedResult] = useState("");
 
+    async function RedeemOne() {
+        try {
+                        
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function RedeemAll() {
+        try {
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function ScanQR() {
+        try {
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
     const onScanSuccess = (result) => {
         console.log(result);
-        setScannedResult(result?.data);
+        if(result?.data) {
+            ScanQR(result?.data);
+            setScannedResult(result?.data);
+        }
     };
 
     const onScanFail = (err) => {
@@ -59,7 +85,7 @@ const QrReader = () => {
                 <video ref={videoEl} className="qr-video"></video>
                 {scannedResult && (
                     <p className="scanned-result">
-                        Scanned Result: {scannedResult}
+                        {scannedResult}
                     </p>
                 )}
             </div>
@@ -90,6 +116,7 @@ const QrReaderContainer = styled.div`
     .qr-video {
         border-radius: 1rem;
         width: 100%;
+        height: 100%;
         border: 1px solid #ccc;
     }
 
