@@ -11,7 +11,6 @@ const QrReader = () => {
 
     async function RedeemOne() {
         try {
-                        
         } catch (error) {
             console.log(error);
         }
@@ -19,7 +18,6 @@ const QrReader = () => {
 
     async function RedeemAll() {
         try {
-            
         } catch (error) {
             console.log(error);
         }
@@ -27,18 +25,21 @@ const QrReader = () => {
 
     async function ScanQR() {
         try {
-
+            const response = await fetch(`${import.meta.env.API_KEY}/`)
         } catch (error) {
             console.log(error);
         }
     }
-    
+
     const onScanSuccess = (result) => {
-        console.log(result);
-        if(result?.data) {
-            ScanQR(result?.data);
-            setScannedResult(result?.data);
-        }
+        setScannedResult((prevState) => {
+            if (prevState !== result.data) {
+                console.log(result.data);
+                return result.data;
+            } else {
+                return prevState;
+            }
+        });
     };
 
     const onScanFail = (err) => {
@@ -84,9 +85,7 @@ const QrReader = () => {
             <div className="qr-reader">
                 <video ref={videoEl} className="qr-video"></video>
                 {scannedResult && (
-                    <p className="scanned-result">
-                        {scannedResult}
-                    </p>
+                    <p className="scanned-result">{scannedResult}</p>
                 )}
             </div>
             <div className="buttons">

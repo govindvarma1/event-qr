@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { GenerateQR, ScanQR } from "./controllers/QRController.js";
+import { GenerateQR, RedeemQR, ScanQR } from "./controllers/QRController.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -16,7 +16,8 @@ app.get("/", (req, res) => {
 })
 
 app.get("/generate-qr", GenerateQR);
-app.post("/scan-qr/:id", ScanQR);
+app.post("/scan-qr", ScanQR);
+app.post("/redeem-qr", RedeemQR);
 
 app.listen(process.env.PORT, ()=> {
     console.log("Server running on port 5000");
