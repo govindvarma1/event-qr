@@ -29,15 +29,15 @@ const QrReader = () => {
     async function ScanQRDetails(email) {
         try {
           // const response = await ScanQR(email);
-          // console.log(response);
+          console.log(email);
         } catch (error) {
             console.log(error);
         }
     }
     
     const onScanSuccess = (result) => {
-        console.log(result);
-        if(result?.data) {
+        // console.log(result.data);
+        if(result.data !== scannedResult) {
             ScanQRDetails(result?.data);
             setScannedResult(result?.data);
         }

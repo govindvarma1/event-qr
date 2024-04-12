@@ -14,7 +14,7 @@ export const ScanQR = async (email) => {
                 return { status: 200, couponsPurchased: sheets.values[i][3], couponsLeft: sheets.values[i][4] };
             }
         }
-        // If user not found, return 404 status
+        // If user not found, rreturn 404 status
         return { status: 404, message: "User not found in the registry" };
     } catch (ex) {
         console.error(ex);
