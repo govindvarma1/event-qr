@@ -1,16 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import styled from "styled-components";
+import { ScanModal } from "../modals/ScanModal";
 
 const QrReader = () => {
     const scanner = useRef();
     const videoEl = useRef(null);
     const qrBoxEl = useRef(null);
     const [qrOn, setQrOn] = useState(true);
+    const [modalShow, setModalShow] = useState(false);
+    const [modalDisplay, setModalDisplay] = useState("")
     const [scannedResult, setScannedResult] = useState("");
+    const [couponsLeft, setCouponsLeft] = useState("");
 
     async function RedeemOne() {
         try {
+            const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id: scannedResult, count: "1"})
+            })
+            setCouponsLeft("");
+            setScannedResult("");
+            const data = await response.json();
+            console.log(data);
+            console.log(response.status);
+            if(response.status === 200) {
+                setModalDisplay("1");
+                setModalShow(true);
+                console.log("redeemed sucessfully");
+            } else if(response.status === 401) {
+                setModalDisplay("2");
+                setModalShow(true);
+                console.log("No Coupons Left");
+            } else if(response.status === 404) {
+                setModalDisplay("3");
+                setModalShow(true);
+                console.log("User didn't register");
+            }
         } catch (error) {
             console.log(error);
         }
@@ -18,14 +47,50 @@ const QrReader = () => {
 
     async function RedeemAll() {
         try {
+            const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id: scannedResult, count: couponsLeft})
+            })
+            setCouponsLeft("");
+            setScannedResult("");
+            const data = await response.json();
+            if(response.status === 200) {
+                setModalDisplay("1");
+                setModalShow(true);
+                console.log("redeemed sucessfully");
+            } else if(response.status === 401) {
+                setModalDisplay("2");
+                setModalShow(true);
+                console.log("No Coupons Left");
+            } else if(response.status === 404) {
+                setModalDisplay("3");
+                setModalShow(true);
+                console.log("User didn't register");
+            }
         } catch (error) {
             console.log(error);
         }
     }
 
-    async function ScanQR() {
+    async function ScanQR(result) {
         try {
-            const response = await fetch(`${import.meta.env.API_KEY}/`)
+            const response = await fetch(`${import.meta.env.VITE_API_KEY}/scan-qr`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id: result})
+            })
+            const data = await response.json();
+            if(response.status === 200) {
+                setCouponsLeft(data.couponsLeft);
+            } else {
+                console.log(data.msg);
+            }
+            
         } catch (error) {
             console.log(error);
         }
@@ -35,6 +100,7 @@ const QrReader = () => {
         setScannedResult((prevState) => {
             if (prevState !== result.data) {
                 console.log(result.data);
+                ScanQR(result.data);
                 return result.data;
             } else {
                 return prevState;
@@ -87,6 +153,10 @@ const QrReader = () => {
                 {scannedResult && (
                     <p className="scanned-result">{scannedResult}</p>
                 )}
+                {couponsLeft && (
+                    <p className="coupons-left">Coupons Left: {couponsLeft}</p>
+                )}
+
             </div>
             <div className="buttons">
                 <button className="one" onClick={() => RedeemOne()}>
@@ -96,6 +166,7 @@ const QrReader = () => {
                     Redeem All Coupon
                 </button>
             </div>
+            <ScanModal display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
         </QrReaderContainer>
     );
 };

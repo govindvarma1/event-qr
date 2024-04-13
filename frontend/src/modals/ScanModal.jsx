@@ -18,9 +18,9 @@ export function ScanModal(props) {
         <img src={Success} style={{ width: "350px" }} alt="" />
             ) : props.display === "2" ? (
               
-              <img src={NotFound} style={{ width: "350px" }} alt="" />
-              ) : (
               <img src={Scanned} style={{ width: "350px" }} alt="" />
+              ) : (
+              <img src={NotFound} style={{ width: "350px" }} alt="" />
             )}
       </Modal.Body>
     </Modal>

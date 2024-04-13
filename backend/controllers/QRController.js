@@ -4,7 +4,6 @@ import QRCode from "qrcode";
 export const ScanQR = async (req, res, next) => {
     try {
         const { id } = req.body;
-        console.log(id)
         const auth = await getAuth();
         const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
         const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});  
@@ -22,12 +21,12 @@ export const ScanQR = async (req, res, next) => {
 export const RedeemQR = async (req, res, next) => {
     try {
         const {id, count} = req.body;
-        console.log(count);
         const auth = await getAuth();
         const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
         const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});  
         for(let i=0; i<sheets.values.length; i++) {
             if(id === sheets.values[i][1]) {
+                console.log(sheets.values[i][4])
                 if (sheets.values[i][4] === "0") {
                     return res.status(401).json({msg: "All Coupons Scanned"});
                 } else {
