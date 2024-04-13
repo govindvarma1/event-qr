@@ -45,10 +45,10 @@ export const GenerateQR = async (req, res, next) => {
     try {
         const auth = await getAuth();
         const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
-        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:C1000"});
+        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});
         for(let i=0; i<sheets.values.length; i++) {
-            const generatedQRCode = await QRCode.toDataURL(sheets.values[i][0]);
-            updateSpreadSheetsValues({spreadsheetId, auth, range: `Sheet1!B${i+2}:B${i+2}`, data: [[generatedQRCode]]});
+            const generatedQRCode = await QRCode.toDataURL(sheets.values[i][1]);
+            updateSpreadSheetsValues({spreadsheetId, auth, range: `Sheet1!C${i+2}:C${i+2}`, data: [[generatedQRCode]]});
         }
         res.send(sheets);
     } catch (ex) {
