@@ -31,7 +31,7 @@ export const RedeemQR = async (req, res, next) => {
                     return res.status(401).json({msg: "All Coupons Scanned"});
                 } else {
                     updateSpreadSheetsValues({spreadsheetId, auth, range: `Sheet1!E${i+2}:E${i+2}`, data: [[sheets.values[i][4]-count]]});
-                    return res.status(200).json({msg: "Scanned Sucessfully", couponsLeft: sheets.values[i][4]-1});
+                    return res.status(200).json({msg: "Scanned Sucessfully", couponsLeft: sheets.values[i][4]-count});
                 }
             }
         }
