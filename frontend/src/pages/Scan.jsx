@@ -11,7 +11,9 @@ const QrReader = () => {
     const [modalShow, setModalShow] = useState(false);
     const [modalDisplay, setModalDisplay] = useState("")
     const [scannedResult, setScannedResult] = useState("");
+    const [found, setFound] = useState(true);
     const [couponsLeft, setCouponsLeft] = useState("");
+    const [modalCouponsLeft, setModalCouponsLeft] = useState("");
 
     async function RedeemOne() {
         try {
@@ -30,6 +32,7 @@ const QrReader = () => {
             if(response.status === 200) {
                 setModalDisplay("1");
                 setModalShow(true);
+                setModalCouponsLeft(data.couponsLeft);
                 console.log("redeemed sucessfully");
             } else if(response.status === 401) {
                 setModalDisplay("2");
@@ -60,6 +63,8 @@ const QrReader = () => {
             if(response.status === 200) {
                 setModalDisplay("1");
                 setModalShow(true);
+                console.log(data.couponsLeft)
+                setModalCouponsLeft(data.couponsLeft);
                 console.log("redeemed sucessfully");
             } else if(response.status === 401) {
                 setModalDisplay("2");
@@ -88,6 +93,7 @@ const QrReader = () => {
             if(response.status === 200) {
                 setCouponsLeft(data.couponsLeft);
             } else {
+                setFound(false);
                 console.log(data.msg);
             }
             
@@ -100,6 +106,8 @@ const QrReader = () => {
         setScannedResult((prevState) => {
             if (prevState !== result.data) {
                 console.log(result.data);
+                setFound(true);
+                setCouponsLeft("");
                 ScanQR(result.data);
                 return result.data;
             } else {
@@ -150,12 +158,17 @@ const QrReader = () => {
             <h1>QR Code Scanner</h1>
             <div className="qr-reader">
                 <video ref={videoEl} className="qr-video"></video>
-                {scannedResult && (
-                    <p className="scanned-result">{scannedResult}</p>
-                )}
-                {couponsLeft && (
-                    <p className="coupons-left">Coupons Left: {couponsLeft}</p>
-                )}
+                <div className="scanned-result">
+                    {scannedResult && (
+                        <p>{scannedResult}</p>
+                    )}
+                    {couponsLeft && (
+                        <p>Coupons Left: {couponsLeft}</p>
+                    )}
+                    {found === false && (
+                        <p>User Didn't Register</p>
+                    )}
+                </div>
 
             </div>
             <div className="buttons">
@@ -166,7 +179,7 @@ const QrReader = () => {
                     Redeem All Coupon
                 </button>
             </div>
-            <ScanModal display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
+            <ScanModal couponsleft={modalCouponsLeft} display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
         </QrReaderContainer>
     );
 };
@@ -197,7 +210,7 @@ const QrReaderContainer = styled.div`
         z-index: 999;
         color: white;
         background-color: rgba(0, 0, 0, 0.7);
-        padding: 5px;
+        padding: 0 5px;
         border-radius: 5px;
     }
     .buttons {
