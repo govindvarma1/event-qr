@@ -5,11 +5,11 @@ export const ScanQR = async (req, res, next) => {
     try {
         const { id } = req.body;
         const auth = await getAuth();
-        const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
-        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});  
+        const spreadsheetId = process.env.SHEET_ID;
+        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "FOOD_COUPONS_QR!A2:F1000"});  
         for(let i=0; i<sheets.values.length; i++) {
             if(id === sheets.values[i][1]) {
-                return res.status(200).json({couponsLeft: sheets.values[i][4]})
+                return res.status(200).json({name: sheets.values[i][0],couponsLeft: sheets.values[i][4]});
             }
         }
         return res.status(404).json({msg: "User didn't register"})
@@ -22,15 +22,15 @@ export const RedeemQR = async (req, res, next) => {
     try {
         const {id, count} = req.body;
         const auth = await getAuth();
-        const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
-        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});  
+        const spreadsheetId = process.env.SHEET_ID;
+        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "FOOD_COUPONS_QR!A2:F1000"});  
         for(let i=0; i<sheets.values.length; i++) {
             if(id === sheets.values[i][1]) {
                 console.log(sheets.values[i][4])
                 if (sheets.values[i][4] === "0") {
                     return res.status(401).json({msg: "All Coupons Scanned"});
                 } else {
-                    updateSpreadSheetsValues({spreadsheetId, auth, range: `Sheet1!E${i+2}:E${i+2}`, data: [[sheets.values[i][4]-count]]});
+                    updateSpreadSheetsValues({spreadsheetId, auth, range: `FOOD_COUPONS_QR!E${i+2}:E${i+2}`, data: [[sheets.values[i][4]-count]]});
                     return res.status(200).json({msg: "Scanned Sucessfully", couponsLeft: sheets.values[i][4]-count});
                 }
             }
@@ -43,12 +43,13 @@ export const RedeemQR = async (req, res, next) => {
 
 export const GenerateQR = async (req, res, next) => {
     try {
+        const {from, to} = req.body;
         const auth = await getAuth();
-        const spreadsheetId = "1N3lo_mcPvFsW8vry0CZdP0rEvfhW8UGaVjQK-AJzUpo";
-        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "Sheet1!A2:E1000"});
+        const spreadsheetId = process.env.SHEET_ID;
+        const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: `FOOD_COUPONS_QR!A${from}:F${to}`});
         for(let i=0; i<sheets.values.length; i++) {
             const generatedQRCode = await QRCode.toDataURL(sheets.values[i][1]);
-            updateSpreadSheetsValues({spreadsheetId, auth, range: `Sheet1!C${i+2}:C${i+2}`, data: [[generatedQRCode]]});
+            updateSpreadSheetsValues({spreadsheetId, auth, range: `FOOD_COUPONS_QR!C${i+from}:C${i+from}`, data: [[generatedQRCode]]});
         }
         res.send(sheets);
     } catch (ex) {

@@ -13,6 +13,7 @@ const QrReader = () => {
     const [scannedResult, setScannedResult] = useState("");
     const [found, setFound] = useState(true);
     const [couponsLeft, setCouponsLeft] = useState("");
+    const [name, setName] = useState("");
     const [modalCouponsLeft, setModalCouponsLeft] = useState("");
 
     async function RedeemOne() {
@@ -59,6 +60,7 @@ const QrReader = () => {
             })
             setCouponsLeft("");
             setScannedResult("");
+            setName("");
             const data = await response.json();
             if(response.status === 200) {
                 setModalDisplay("1");
@@ -92,6 +94,8 @@ const QrReader = () => {
             const data = await response.json();
             if(response.status === 200) {
                 setCouponsLeft(data.couponsLeft);
+                console.log(data.name)
+                setName(data.name);
             } else {
                 setFound(false);
                 console.log(data.msg);
@@ -163,7 +167,10 @@ const QrReader = () => {
                         <p>{scannedResult}</p>
                     )}
                     {couponsLeft && (
-                        <p>Coupons Left: {couponsLeft}</p>
+                        <>
+                            <p>Name: {name}</p>
+                            <p>Coupons Left: {couponsLeft}</p>
+                        </>
                     )}
                     {found === false && (
                         <p>User Didn't Register</p>

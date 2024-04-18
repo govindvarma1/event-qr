@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
     res.send("You are on home route");
 })
 
-app.get("/generate-qr", GenerateQR);
+app.post("/generate-qr", GenerateQR);
 app.post("/scan-qr", ScanQR);
 app.post("/redeem-qr", RedeemQR);
 
