@@ -9,7 +9,7 @@ export const ScanQR = async (req, res, next) => {
         const sheets = await getSpreadSheetValues({spreadsheetId, auth, range: "FOOD_COUPONS_QR!A2:F1000"});  
         for(let i=0; i<sheets.values.length; i++) {
             if(id === sheets.values[i][1]) {
-                return res.status(200).json({name: sheets.values[i][0],couponsLeft: sheets.values[i][4]});
+                return res.status(200).json({excelRow: i+2,name: sheets.values[i][0],couponsLeft: sheets.values[i][4]});
             }
         }
         return res.status(404).json({msg: "User didn't register"})
@@ -31,7 +31,7 @@ export const RedeemQR = async (req, res, next) => {
                     return res.status(401).json({msg: "All Coupons Scanned"});
                 } else {
                     updateSpreadSheetsValues({spreadsheetId, auth, range: `FOOD_COUPONS_QR!E${i+2}:E${i+2}`, data: [[sheets.values[i][4]-count]]});
-                    return res.status(200).json({msg: "Scanned Sucessfully", couponsLeft: sheets.values[i][4]-count});
+                    return res.status(200).json({excelRow: i+2,msg: "Scanned Sucessfully", couponsLeft: sheets.values[i][4]-count});
                 }
             }
         }

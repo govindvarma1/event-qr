@@ -15,6 +15,7 @@ const QrReader = () => {
     const [couponsLeft, setCouponsLeft] = useState("");
     const [name, setName] = useState("");
     const [modalCouponsLeft, setModalCouponsLeft] = useState("");
+    const [excelRow, setExcelRow] = useState("");
 
     async function RedeemOne() {
         try {
@@ -94,8 +95,9 @@ const QrReader = () => {
             const data = await response.json();
             if(response.status === 200) {
                 setCouponsLeft(data.couponsLeft);
-                console.log(data.name)
                 setName(data.name);
+                setExcelRow(data?.excelRow);
+                console.log(data.name)
             } else {
                 setFound(false);
                 console.log(data.msg);
@@ -170,6 +172,7 @@ const QrReader = () => {
                         <>
                             <p>Name: {name}</p>
                             <p>Coupons Left: {couponsLeft}</p>
+                            <p>Excel Row: {excelRow}</p>
                         </>
                     )}
                     {found === false && (
