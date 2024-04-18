@@ -219,7 +219,7 @@ const QrReaderContainer = styled.div`
         left: 10px;
         z-index: 999;
         color: white;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: #000;
         padding: 0 5px;
         border-radius: 5px;
     }
