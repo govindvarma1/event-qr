@@ -55,7 +55,7 @@ const QrReader = () => {
     }
 
     async function RedeemAll() {
-        isLoading(true);
+        setIsLoading(true);
         try {
             const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
                 method: "POST",
