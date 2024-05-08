@@ -16,8 +16,10 @@ const QrReader = () => {
     const [name, setName] = useState("");
     const [modalCouponsLeft, setModalCouponsLeft] = useState("");
     const [excelRow, setExcelRow] = useState("");
+    const [isLoading, setIsLoading] = useEffect(false);
 
     async function RedeemOne() {
+        setIsLoading(true);
         try {
             const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
                 method: "POST",
@@ -47,10 +49,13 @@ const QrReader = () => {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     async function RedeemAll() {
+        isLoading(true);
         try {
             const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
                 method: "POST",
@@ -80,6 +85,8 @@ const QrReader = () => {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -182,11 +189,11 @@ const QrReader = () => {
 
             </div>
             <div className="buttons">
-                <button className="one" onClick={() => RedeemOne()}>
-                    Redeem One Coupon
+                <button className={`one ${isLoading?"loading":""}`} onClick={() => RedeemOne()} disabled={isLoading}>
+                    {isLoading? "Redeem One Coupon": "Reedeming..."}
                 </button>
-                <button className="all" onClick={() => RedeemAll()}>
-                    Redeem All Coupon
+                <button className={`all ${isLoading?"loading":""}`} onClick={() => RedeemAll()} disabled={isLoading}>
+                    {isLoading? "Redeem All Coupons": "Reedeming..."}
                 </button>
             </div>
             <ScanModal couponsleft={modalCouponsLeft} display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
@@ -237,6 +244,9 @@ const QrReaderContainer = styled.div`
         }
         .all {
             background-color: #0d6efd;
+        }
+        .loading {
+            opacity: 50%;
         }
     }
 `;
