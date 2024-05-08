@@ -16,7 +16,7 @@ const QrReader = () => {
     const [name, setName] = useState("");
     const [modalCouponsLeft, setModalCouponsLeft] = useState("");
     const [excelRow, setExcelRow] = useState("");
-    const [isLoading, setIsLoading] = useEffect(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     async function RedeemOne() {
         setIsLoading(true);
