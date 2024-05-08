@@ -190,10 +190,10 @@ const QrReader = () => {
             </div>
             <div className="buttons">
                 <button className={`one ${isLoading?"loading":""}`} onClick={() => RedeemOne()} disabled={isLoading}>
-                    {isLoading? "Redeem One Coupon": "Reedeming..."}
+                    {isLoading? "Reedeming...": "Redeem One Coupon"}
                 </button>
                 <button className={`all ${isLoading?"loading":""}`} onClick={() => RedeemAll()} disabled={isLoading}>
-                    {isLoading? "Redeem All Coupons": "Reedeming..."}
+                    {isLoading? "Reedeming...": "Redeem All Coupons"}
                 </button>
             </div>
             <ScanModal couponsleft={modalCouponsLeft} display={modalDisplay} show={modalShow} onHide={() => setModalShow(false)} />
