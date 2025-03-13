@@ -37,7 +37,7 @@ const updateSpreadSheetsValues = async ({ spreadsheetId, auth, range, data }) =>
                 values: data
             }
         });
-        console.log(`Updated ${range} Sucessfully`);
+        console.log(`Updated ${range} Successfully`);
     } catch (error) {
         console.log("error", error);
     }
