@@ -3,8 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import router from "./routes/router.js";
-// Remove the punycode import for now
-// import punycode from "punycode/";
 
 dotenv.config();
 
