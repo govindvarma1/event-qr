@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.19.2",
+    "express-validator": "^7.2.1",
     "googleapis": "^134.0.0",
     "mongoose": "^8.12.1",
     "punycode": "^2.3.1",
