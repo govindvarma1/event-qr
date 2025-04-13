@@ -21,7 +21,7 @@ const QrReader = () => {
     async function RedeemOne() {
         setIsLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/redeem-qr`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -57,7 +57,7 @@ const QrReader = () => {
     async function RedeemAll() {
         setIsLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_KEY}/redeem-qr`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/redeem-qr`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -92,7 +92,7 @@ const QrReader = () => {
 
     async function ScanQR(result) {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_KEY}/scan-qr`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/scan-qr`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
