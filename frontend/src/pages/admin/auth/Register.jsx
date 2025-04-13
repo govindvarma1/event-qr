@@ -1,10 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const Register = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(false); // Track API request state
+	const navigate = useNavigate(); // Initialize navigate
+
+	useEffect(() => {
+		const verifyToken = async () => {
+			const token = localStorage.getItem("token");
+			if (!token) return; // If no token, stay on the same page
+
+			try {
+				const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/verify-token`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (response.ok) {
+					navigate("/"); // Redirect to home if token is valid
+				}
+			} catch (err) {
+				console.error("Token verification failed:", err.message);
+			}
+		};
+
+		verifyToken();
+	}, [navigate]); // Run on component mount
 
 	const handleRegister = async (e) => {
 		e.preventDefault();
@@ -32,7 +59,7 @@ const Register = () => {
 			}
 
 			const data = await response.json();
-			localStorage.setItem("token", data.token); // Store token in local storage
+			localStorage.setItem("token", data.authToken); // Store token in local storage
 			alert("Registration successful!");
 		} catch (err) {
 			setError(err.message);

@@ -1,8 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
 import { createEvent } from '../controllers/eventController.js';
 import adminAuthMiddleware from '../middlewares/adminAuthMiddleware.js';
 
-const router = express.Router();
+const router = Router();
 
 // Route for creating an event
 router.post('/createEvent', adminAuthMiddleware, createEvent);
