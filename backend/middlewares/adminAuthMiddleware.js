@@ -12,9 +12,9 @@ const adminAuthMiddleware = (req, res, next) => {
         const decoded = jwt.verify(authToken, process.env.JWT_SECRET);
 
         // Attach email and user ID to the request object
-        req.admin = {
+        req.user = {
             email: decoded.email,
-            userId: decoded._id,
+            userId: decoded.id,
         };
 
         next(); // Proceed to the next middleware or route handler

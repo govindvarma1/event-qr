@@ -1,6 +1,7 @@
 import express from "express";
 import { GenerateQR, RedeemQR, ScanQR } from "../controllers/QRController.js";
-import adminRouter from "./adminRoutes.js"; // Import admin routes
+import adminAuthRouter from "./adminAuthRoutes.js";
+import eventRouter from "./eventRouter.js";
 
 const router = express.Router();
 
@@ -11,6 +12,9 @@ router.post("/generate-qr", GenerateQR);
 router.post("/scan-qr", ScanQR);
 router.post("/redeem-qr", RedeemQR);
 
-router.use("/admin", adminRouter); // Use admin routes
+// Use event routes
+router.use('/events', eventRouter);
+
+router.use("/auth", adminAuthRouter); // Use admin routes
 
 export default router;

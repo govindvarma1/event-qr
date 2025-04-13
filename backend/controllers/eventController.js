@@ -8,10 +8,12 @@ export const createEvent = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, description, date, sheetId, sheetName, createdBy } = req.body;
+    console.log(req.user.userId); // Log the userId for debugging
+    const { name, description, sheetId, sheetName } = req.body;
+    const createdBy = req.user.userId; // Extract userId from middleware
 
     // Check for required fields
-    if (!name || !description || !date || !sheetId || !sheetName || !createdBy) {
+    if (!name || !description || !sheetId || !sheetName) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -20,7 +22,7 @@ export const createEvent = async (req, res) => {
         const event = new Event({
             name,
             description,
-            date,
+            date: new Date(), // Set the current date and time
             sheetId,
             sheetName,
             createdBy
