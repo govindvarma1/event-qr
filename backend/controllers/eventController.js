@@ -10,7 +10,7 @@ export const createEvent = async (req, res) => {
 
     console.log(req.user.userId); // Log the userId for debugging
     const { name, description, sheetId, sheetName } = req.body;
-    const createdBy = req.user.userId; // Extract userId from middleware
+    const createdBy = req.user.id; // Extract userId from middleware
 
     // Check for required fields
     if (!name || !description || !sheetId || !sheetName) {
@@ -34,5 +34,15 @@ export const createEvent = async (req, res) => {
         res.status(201).json(savedEvent);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+export const getUserEvents = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extract user ID from the token (set by middleware)
+        const events = await Event.find({ createdBy: userId }); // Fetch events created by the user
+        res.status(200).json(events);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch events", error: err.message });
     }
 };
