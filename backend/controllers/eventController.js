@@ -36,3 +36,17 @@ export const createEvent = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+export const getUserEvents = async (req, res) => {
+    try {
+        const { userId, email } = req.user; // Extract user ID and email from the request object
+        const events = await Event.find({ createdBy: userId }); // Fetch events created by the specific user
+
+        res.status(200).json({
+            message: `Events fetched successfully for user: ${email}`,
+            events,
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch events", error: err.message });
+    }
+};
