@@ -50,3 +50,21 @@ export const getUserEvents = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch events", error: err.message });
     }
 };
+
+export const getEventDetails = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+
+        // Fetch event details from the database
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        res.status(200).json(event);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
