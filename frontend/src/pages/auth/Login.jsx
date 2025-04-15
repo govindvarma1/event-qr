@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate, Link } from "react-router-dom"; // Import useNavigate and Link for redirection
 
 const Login = () => {
 	const [email, setEmail] = useState("");
@@ -69,9 +69,9 @@ const Login = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
-			<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-				<h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+			<div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+				<h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 				<form onSubmit={handleLogin}>
 					<div className="mb-4">
 						<label className="block text-gray-700 font-medium mb-2">Email:</label>
@@ -102,6 +102,12 @@ const Login = () => {
 						{isLoading ? "Logging in..." : "Login"}
 					</button>
 				</form>
+				<p className="text-sm text-gray-600 mt-4 text-center">
+					Don't have an account?{" "}
+					<Link to="/register" className="text-blue-500 hover:underline">
+						Register here
+					</Link>
+				</p>
 			</div>
 		</div>
 	);

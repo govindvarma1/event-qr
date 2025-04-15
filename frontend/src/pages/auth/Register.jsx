@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate, Link } from "react-router-dom"; // Import useNavigate and Link for redirection
 
 const Register = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(false); // Track API request state
 	const navigate = useNavigate(); // Initialize navigate
@@ -38,8 +39,14 @@ const Register = () => {
 		setError("");
 		setIsLoading(true); // Set loading state
 
-		if (!email || !password) {
-			setError("Email and password are required");
+		if (!email || !password || !confirmPassword) {
+			setError("All fields are required");
+			setIsLoading(false);
+			return;
+		}
+
+		if (password !== confirmPassword) {
+			setError("Passwords do not match");
 			setIsLoading(false);
 			return;
 		}
@@ -58,9 +65,7 @@ const Register = () => {
 				throw new Error(errorData.message || "Registration failed");
 			}
 
-			const data = await response.json();
-			localStorage.setItem("token", data.authToken); // Store token in local storage
-			alert("Registration successful!");
+			navigate("/login"); // Redirect to login after successful registration
 		} catch (err) {
 			setError(err.message);
 		} finally {
@@ -69,9 +74,9 @@ const Register = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
-			<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-				<h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+			<div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+				<h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
 				<form onSubmit={handleRegister}>
 					<div className="mb-4">
 						<label className="block text-gray-700 font-medium mb-2">Email:</label>
@@ -93,6 +98,16 @@ const Register = () => {
 							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
+					<div className="mb-4">
+						<label className="block text-gray-700 font-medium mb-2">Confirm Password:</label>
+						<input
+							type="password"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							required
+							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+					</div>
 					{error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 					<button
 						type="submit"
@@ -102,6 +117,12 @@ const Register = () => {
 						{isLoading ? "Registering..." : "Register"}
 					</button>
 				</form>
+				<p className="text-sm text-gray-600 mt-4 text-center">
+					Already have an account?{" "}
+					<Link to="/login" className="text-blue-500 hover:underline">
+						Login here
+					</Link>
+				</p>
 			</div>
 		</div>
 	);
