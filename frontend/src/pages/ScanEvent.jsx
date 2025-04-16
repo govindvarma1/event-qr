@@ -196,6 +196,11 @@ const QrReader = () => {
 		// Fetch event details when on the route
 		const fetchEventDetails = async () => {
 			const token = localStorage.getItem("token");
+			useEffect(() => {
+				if (!eventDetails) {
+					console.log("Waiting for event details to be fetched...");
+				}
+			}, [eventDetails]);
 			if (!eventId) {
 				console.error("eventId is missing from route parameters.");
 				return;
@@ -225,6 +230,12 @@ const QrReader = () => {
 
 		fetchEventDetails();
 	}, [eventId]); // Run when eventId changes
+
+	useEffect(() => {
+		if (!eventDetails) {
+			console.log("Waiting for event details to be fetched...");
+		}
+	}, [eventDetails]);
 
 	return (
 		<div className="flex flex-col items-center gap-8 p-8">
