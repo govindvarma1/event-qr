@@ -1,8 +1,6 @@
 # Event QR
 
-Event QR is a versatile web application designed to streamline QR code scanning functionalities for various events and scenarios. Developed in a short span of time. Whether you're organizing an event, managing access control, or tracking attendance, Event QR Web Service offers a seamless solution for efficiently handling QR code interactions.
-
-Utilized initially for the Ugadi Event organized by the Telugu Cultural Association at Jawaharlal Nehru University, New Delhi, in 2024, Event QR Web Service proved its effectiveness in validating food coupons. However, its capabilities extend far beyond this single event, with the potential to cater to a wide range of applications requiring QR code scanning.
+Event QR is a versatile web application designed to streamline QR code scanning functionalities for various events and scenarios. Developed in a short span of time, it offers a seamless solution for efficiently handling QR code interactions.
 
 ## Contents
 
@@ -31,6 +29,7 @@ Event QR Web Service is built with a frontend developed using React and a backen
 - Backend:
   - Node.js
   - Express
+  - MongoDB
   - Google APIs
 
 ---
@@ -38,101 +37,91 @@ Event QR Web Service is built with a frontend developed using React and a backen
 ## Features
 
 1. **QR Code Scanning**: The frontend enables users to scan QR codes using the device's camera for various use cases.
-
-2. **Google Sheets Integration**: The backend interacts with Google Sheets to store scanning details. This functionality can be extended to accommodate different data storage solutions.
-
-3. **Customizable Use Cases**: The application is designed to be easily customizable for different events or scenarios requiring QR code scanning.
-
-4. **Google API Integration**: Users need to create Google API keys from the Google Developer Console and save the JSON file in the root directory of the backend code to use the application. This allows seamless integration with Google Sheets.
-
-5. **Future Development**: The project is intended to be more generic in the future, catering to a wider range of use cases beyond the current implementation. Stay tuned for updates as the project evolves to become a general-purpose QR code scanning solution.
+2. **Google Sheets Integration**: The backend interacts with Google Sheets to store and validate event details.
+3. **Event Management**: Users can create, view, and manage events.
+4. **Token-Based Authentication**: Secure login and registration system using JWT.
+5. **Validation for Google Sheets**: The backend verifies the provided Google Sheet ID and Sheet Name during event creation.
 
 ---
 
 ## Setup Instructions
 
-1. **Create Google API Keys**:
-   - Visit the Google Developer Console and create API keys required for accessing Google APIs.
-   - Ensure that you enable the necessary APIs such as Google Sheets API.
+### Prerequisites
 
-2. **Save JSON File in Backend Directory**:
-   - Download the JSON file containing the API credentials from the Google Developer Console.
-   - Save this JSON file in the root directory of the backend code.
-   - Ensure that the filename matches the expected filename in your backend code configuration.
+- Node.js and npm installed on your system.
+- MongoDB database.
+- Google Cloud account with access to Google Sheets API.
 
-3. **Google Sheets Integration**:
-   - The application exclusively utilizes Google Sheets for storing QR codes and associated details.
-   - Ensure that you grant the necessary permissions and set up the Google Sheets accordingly to accommodate the data.
+### Backend Setup
 
-4. **Future Development**:
-   - The project is intended to be more generic in the future, catering to a wider range of use cases beyond the current implementation.
-   - Stay tuned for updates as the project evolves to become a general-purpose QR code scanning solution.
+1. Navigate to the `backend` directory:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the `backend` directory with the following variables:
+   ```env
+   DB_URL=<your_mongodb_connection_string>
+   JWT_SECRET=<your_jwt_secret>
+   PORT=5000
+   ```
+4. Add your Google API credentials in a `google.json` file in the `backend` directory.
+5. Start the backend server:
+   ```bash
+   npm start
+   ```
 
-5. **Install dependencies for both frontend and backend**:
-   - Navigate to the `frontend` directory and install dependencies:
+### Frontend Setup
 
-     ```
-     cd frontend
-     npm install
-     ```
-
-   - Navigate to the `backend` directory and install dependencies:
-
-     ```
-     cd ../backend
-     npm install
-     ```
-
-6. **Set up environment variables**:
-   - Create a `.env` file in the backend directory and define the necessary environment variables, such as API keys and Google Sheets credentials.
-
-7. **Run the backend server**:
-   - Navigate to the `backend` directory and start the server:
-
-     ```
-     npm start
-     ```
-
-8. **Run the frontend development server**:
-   - Navigate to the `frontend` directory and start the development server:
-
-     ```
-     cd ../frontend
-     npm start
-     ```
-
----
-
-Ensure that you follow these steps to properly set up the application environment and integrate it with Google Sheets for storing QR codes and associated details. Stay updated for future enhancements and the transition towards a more versatile and general-purpose QR code scanning solution.
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the `frontend` directory with the following variable:
+   ```env
+   VITE_BACKEND_URL=http://localhost:5000
+   ```
+4. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
 ## Usage
 
-1. Customize the application for your specific use case by modifying the frontend and backend code as needed.
+1. Open the frontend application in your browser (default: `http://localhost:5173`).
+2. Register or log in to access the application.
+3. Create events by providing valid Google Sheet ID and Sheet Name.
+4. Scan QR codes and manage event details.
 
-2. Utilize the QR code scanning functionality for various scenarios by adapting the frontend and backend logic accordingly.
+### Notes
 
-3. Make use of Google Sheets integration for storing scanning details. Ensure that proper authentication and authorization mechanisms are in place to protect sensitive data.
+- The UI currently requires significant improvements to enhance user experience.
+- Ensure that the Google Sheet ID and Sheet Name are valid and accessible by the service account.
 
 ---
 
 ## Contributing
 
-Contributions to Event QR Web Service are welcome! To contribute, follow these steps:
+Contributions to Event QR are welcome! To contribute:
 
 1. Fork the repository.
-
 2. Create a new branch for your feature or bug fix.
-
 3. Commit your changes and push to your branch.
-
 4. Submit a pull request detailing your changes.
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). Feel free to modify and distribute it as per the terms of the license.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---

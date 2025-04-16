@@ -1,5 +1,6 @@
 import Event from '../models/eventModel.js';
 import { validationResult } from 'express-validator';
+import { getAuth, getSpreadSheet } from '../services/GoogleSheetServices.js';
 
 export const createEvent = async (req, res) => {
     // Validate request body
@@ -8,7 +9,6 @@ export const createEvent = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    console.log(req.user.userId); // Log the userId for debugging
     const { name, description, sheetId, sheetName } = req.body;
     const createdBy = req.user.userId; // Extract userId from middleware
 
@@ -18,6 +18,15 @@ export const createEvent = async (req, res) => {
     }
 
     try {
+        // Verify if the given sheetId and sheetName are correct
+        const auth = await getAuth();
+        const sheet = await getSpreadSheet({ spreadsheetId: sheetId, auth });
+
+        const sheetExists = sheet.data.sheets.some((sheet) => sheet.properties.title === sheetName);
+        if (!sheetExists) {
+            return res.status(400).json({ message: 'Invalid sheet name or sheet ID' });
+        }
+
         // Create new event
         const event = new Event({
             name,
